@@ -1,4 +1,4 @@
-# 🏡 Pousa.Lá
+# Pousa.Lá
 
 Projeto desenvolvido por **Ana Letícia Nobre da Silva**, inspirado em plataformas como o Booking.com.
 
