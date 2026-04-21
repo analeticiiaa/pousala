@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Avaliar - pousa.lá</title>
+    <style>
+        :root { --cor-fundo: #F7F9FA; --cor-primaria: #00A699; --cor-destaque: #FF5A5F; --cor-texto: #484848; --cor-branco: #FFFFFF; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--cor-fundo); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background-color: var(--cor-branco); padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); width: 100%; max-width: 450px; }
+        h2 { color: var(--cor-primaria); text-align: center; margin-top: 0;}
+        .info-local { background: #e9f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold;}
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px;}
+        select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; background-color: var(--cor-destaque); color: white; border: none; padding: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        button:hover { background-color: #E0484D; }
+        /* Adicionamos a cor de erro para o bloqueio */
+        .sucesso { background-color: #d4edda; color: #155724; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 20px;}
+        .erro { background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 20px;}
+        .voltar { display: block; text-align: center; margin-top: 15px; color: var(--cor-primaria); text-decoration: none; font-weight: bold;}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Avaliar Estadia</h2>
+        <div class="info-local">🏨 {{ propriedade.nome }}</div>
+
+        {% if mensagem %}
+            <div class="{% if erro %}erro{% else %}sucesso{% endif %}">{{ mensagem }}</div>
+            <a href="javascript:history.back()" class="voltar">Voltar</a>
+        {% else %}
+            <form method="POST">
+                <div class="form-group">
+                    <label>Sua Nota (1 a 5 Estrelas)</label>
+                    <select name="nota" required>
+                        <option value="5">⭐⭐⭐⭐⭐ (5 - Excelente)</option>
+                        <option value="4">⭐⭐⭐⭐ (4 - Muito Bom)</option>
+                        <option value="3">⭐⭐⭐ (3 - Bom)</option>
+                        <option value="2">⭐⭐ (2 - Ruim)</option>
+                        <option value="1">⭐ (1 - Péssimo)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Deixe um comentário:</label>
+                    <textarea name="comentario" rows="3" placeholder="Como foi a sua viagem?" required></textarea>
+                </div>
+                <button type="submit">Enviar Avaliação</button>
+            </form>
+            <a href="javascript:history.back()" class="voltar">Cancelar e voltar</a>
+        {% endif %}
+    </div>
+</body>
+</html>

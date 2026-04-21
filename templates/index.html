@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>pousa.lá - Encontre sua estadia</title>
+    <style>
+        :root { --cor-fundo: #F7F9FA; --cor-primaria: #00A699; --cor-destaque: #FF5A5F; --cor-texto: #484848; --cor-branco: #FFFFFF; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--cor-fundo); color: var(--cor-texto); margin: 0; padding: 0; }
+        header { background-color: var(--cor-branco); padding: 15px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        header h1 { color: var(--cor-primaria); margin: 0; font-size: 24px; cursor: pointer; }
+        header a { text-decoration: none; color: var(--cor-texto); font-weight: bold; padding: 10px 20px; border-radius: 8px; border: 2px solid var(--cor-primaria); transition: all 0.3s ease; }
+        header a:hover { background-color: var(--cor-primaria); color: var(--cor-branco); }
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .caixa-busca { background: var(--cor-branco); padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); margin-bottom: 40px; }
+        .caixa-busca h3 { margin-top: 0; color: var(--cor-primaria); font-size: 22px; }
+        .form-linha { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .form-group { flex: 1; min-width: 150px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        button.btn-buscar { background-color: var(--cor-destaque); color: var(--cor-branco); border: none; padding: 14px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; }
+        .resultado { background: var(--cor-branco); padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 6px solid var(--cor-primaria); display: flex; justify-content: space-between; align-items: center; }
+        .info-propriedade h3 { margin: 0 0 10px 0; color: var(--cor-texto); font-size: 20px; display: flex; align-items: center; gap: 10px;}
+        .btn-reservar { background-color: var(--cor-primaria); color: var(--cor-branco); border: none; padding: 12px 20px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; text-decoration: none; text-align: center; }
+        .btn-fav { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; transition: transform 0.2s ease;}
+        .btn-fav:hover { transform: scale(1.2); }
+        .erro-alerta { background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; font-weight: bold; text-align: center; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>pousa.lá</h1>
+        <div>
+            {% if session.usuario_nome %}
+                <span style="margin-right: 20px; font-weight: bold;">Olá, {{ session.usuario_nome }}!</span>
+                {% if session.usuario_tipo == 'anfitriao' %}
+                    <a href="/anunciar" style="margin-right: 10px; border-color: var(--cor-destaque);">Anunciar Imóvel</a>
+                    <a href="/painel" style="margin-right: 10px; border-color: var(--cor-primaria);">Meu Painel</a>
+                {% elif session.usuario_tipo == 'hospede' %}
+                    <a href="/meus_favoritos" style="margin-right: 10px; border-color: var(--cor-destaque);">❤️ Favoritos</a>
+                    <a href="/minhas_reservas" style="margin-right: 10px; border-color: var(--cor-primaria);">Minhas Reservas</a>
+                {% endif %}
+                <a href="/logout" style="border-color: #ddd; color: #666;">Sair</a>
+            {% else %}
+                <a href="/login" style="margin-right: 10px;">Entrar</a>
+                <a href="/cadastro">Criar uma Conta</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="container">
+        
+        {% if erro_data %}
+            <div class="erro-alerta">{{ erro_data }}</div>
+        {% endif %}
+
+        <div class="caixa-busca">
+            <h3>Encontre sua próxima estadia</h3>
+            <form method="POST">
+                <div class="form-linha">
+                    <div class="form-group"><label>Destino</label><input type="text" name="localizacao" placeholder="Ex: Maceió" required></div>
+                    <div class="form-group"><label>Pessoas</label><input type="number" name="capacidade" min="1" value="1" required></div>
+                    <div class="form-group"><label>Check-in</label><input type="date" name="data_inicio" id="busca_in" required></div>
+                    <div class="form-group"><label>Check-out</label><input type="date" name="data_fim" id="busca_out" required></div>
+                </div>
+                <button type="submit" class="btn-buscar">Pesquisar</button>
+            </form>
+        </div>
+
+        {% if resultados %}
+            <h2>Opções disponíveis:</h2>
+            {% for prop in resultados %}
+                <div class="resultado">
+                    <div class="info-propriedade">
+                        <h3>
+                            {{ prop.nome }} <span style="font-size: 16px; color: #f5a623;"> (⭐ {{ prop.media_notas }})</span>
+                            
+                            {% if session.usuario_tipo == 'hospede' %}
+                                <form action="/favoritar/{{ prop.nome|urlencode }}" method="POST" style="margin: 0;" onsubmit="favoritarSemRecarregar(event, this)">
+                                    <button type="submit" class="btn-fav">
+                                        {% if prop.nome in favs_usuario %}❤️{% else %}🤍{% endif %}
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </h3>
+                        <p>📍 {{ prop.localizacao }} | 👤 Até {{ prop.capacidade }} pessoas | 💰 R$ {{ prop.preco }} / noite</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <a href="/reservar/{{ prop.nome|urlencode }}" class="btn-reservar">Reservar Agora</a>
+                        <a href="/avaliar/{{ prop.nome|urlencode }}" class="btn-reservar" style="background-color: white; color: var(--cor-primaria); border: 2px solid var(--cor-primaria);">Avaliar</a>
+                        {% if session.usuario_tipo == 'hospede' %}
+                            <a href="/duvidas/{{ prop.nome|urlencode }}" class="btn-reservar" style="background-color: #333; color: white; border: none;">💡 Dúvidas & Chat</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% elif request.method == 'POST' %}
+            <h3 style="color: var(--cor-destaque); text-align: center;">Nenhuma pousada disponível nestas datas ou critérios.</h3>
+        {% endif %}
+    </div>
+
+    <script>
+        // 1. Lógica do Coraçãozinho Mágico (Sem recarregar a tela)
+        function favoritarSemRecarregar(event, form) {
+            event.preventDefault(); // Impede a página de recarregar e voltar pro topo!
+            
+            // Manda a informação pro Python escondido (em background)
+            fetch(form.action, { method: 'POST' })
+            .then(() => {
+                // Troca o coração na hora pro usuário ver!
+                let btn = form.querySelector('button');
+                if (btn.innerText === '❤️') {
+                    btn.innerText = '🤍';
+                } else {
+                    btn.innerText = '❤️';
+                }
+            });
+        }
+
+        // 2. Lógica das Datas
+        const hojeObj = new Date();
+        hojeObj.setMinutes(hojeObj.getMinutes() - hojeObj.getTimezoneOffset());
+        const hoje = hojeObj.toISOString().split("T")[0];
+
+        const inputIn = document.getElementById('busca_in');
+        const inputOut = document.getElementById('busca_out');
+
+        inputIn.setAttribute('min', hoje);
+        inputOut.setAttribute('min', hoje);
+
+        inputIn.addEventListener('change', function() {
+            let inDate = new Date(this.value);
+            inDate.setDate(inDate.getDate() + 1); 
+            let nextDay = inDate.toISOString().split("T")[0];
+            
+            inputOut.setAttribute('min', nextDay);
+            
+            if(inputOut.value && inputOut.value <= this.value) {
+                inputOut.value = nextDay;
+            }
+        });
+    </script>
+</body>
+</html>

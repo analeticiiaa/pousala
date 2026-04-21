@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro - pousa.lá</title>
+    <style>
+        /* Definindo nossa paleta de cores */
+        :root {
+            --cor-fundo: #F7F9FA;
+            --cor-primaria: #00A699;
+            --cor-destaque: #FF5A5F;
+            --cor-texto: #484848;
+            --cor-branco: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            margin: 0;
+            display: flex;
+            justify-content: center; /* Centraliza horizontalmente */
+            align-items: center;     /* Centraliza verticalmente */
+            height: 100vh;           /* Ocupa a tela toda */
+        }
+
+        .card-cadastro {
+            background-color: var(--cor-branco);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .card-cadastro h2 {
+            text-align: center;
+            color: var(--cor-primaria);
+            margin-top: 0;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box; /* Garante que o padding não quebre a largura */
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 0 3px rgba(0, 166, 153, 0.2);
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--cor-destaque);
+            color: var(--cor-branco);
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #E0484D; /* Um tom um pouco mais escuro para o hover */
+        }
+
+        button:active {
+            transform: scale(0.98); /* Efeito de clique */
+        }
+
+        .mensagem {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .sucesso { background-color: #d4edda; color: #155724; }
+        .erro { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+
+    <div class="card-cadastro">
+        <h2>pousa.lá</h2>
+        
+        {% if mensagem %}
+            <div class="mensagem {% if sucesso %}sucesso{% else %}erro{% endif %}">
+                {{ mensagem }}
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label>Como você quer usar o site?</label>
+                <select name="tipo" required>
+                    <option value="hospede">Quero ser Hóspede</option>
+                    <option value="anfitriao">Quero anunciar (Anfitrião)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Nome Completo</label>
+                <input type="text" name="nome" placeholder="Digite seu nome" required>
+            </div>
+
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" name="email" placeholder="seu@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" name="senha" placeholder="Crie uma senha forte" required>
+            </div>
+
+            <button type="submit">Criar minha conta</button>
+        </form>
+    </div>
+
+</body>
+</html>

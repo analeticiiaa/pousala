@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Entrar - pousa.lá</title>
+    <style>
+        :root { --cor-fundo: #F7F9FA; --cor-primaria: #00A699; --cor-destaque: #FF5A5F; --cor-texto: #484848; --cor-branco: #FFFFFF; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--cor-fundo); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; color: var(--cor-texto); }
+        .card { background-color: var(--cor-branco); padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); width: 100%; max-width: 400px; }
+        .card h2 { text-align: center; color: var(--cor-primaria); margin-top: 0; font-size: 26px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px;}
+        button { width: 100%; background-color: var(--cor-destaque); color: white; border: none; padding: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #E0484D; }
+        
+        /* CAIXA DE ERRO */
+        .erro-alerta { background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-size: 15px;}
+        .erro-alerta a { color: #721c24; font-weight: bold; text-decoration: underline; display: inline-block; margin-top: 8px;}
+        
+        .link-rodape { display: block; text-align: center; margin-top: 15px; color: var(--cor-primaria); text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Entrar no pousa.lá</h2>
+        
+        {% if erro %}
+            <div class="erro-alerta">
+                {{ erro }}<br>
+                <a href="/cadastro">Clique aqui para criar uma conta!</a>
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" name="email" placeholder="Seu e-mail" required>
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" name="senha" placeholder="Sua senha" required>
+            </div>
+            <button type="submit">Entrar</button>
+        </form>
+        
+        <a href="/cadastro" class="link-rodape">Ainda não tem conta? Cadastre-se</a>
+        <a href="/" class="link-rodape" style="color: #888; font-size: 14px;">Voltar para o início</a>
+    </div>
+</body>
+</html>

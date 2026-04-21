@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Dúvidas - {{ propriedade.nome }}</title>
+    <style>
+        :root { --cor-fundo: #F7F9FA; --cor-primaria: #00A699; --cor-destaque: #FF5A5F; --cor-texto: #484848; --cor-branco: #FFFFFF; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--cor-fundo); padding: 40px; }
+        .container { max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h2 { color: var(--cor-primaria); margin-top: 0;}
+        .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; }
+        .pergunta { font-weight: bold; color: var(--cor-texto); margin-bottom: 5px; }
+        .resposta { color: #666; }
+        .btn-chat { display: block; text-align: center; margin-top: 30px; padding: 15px; background: #333; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
+        .btn-chat:hover { background: #000; }
+        .voltar { display: block; text-align: center; margin-top: 20px; color: var(--cor-primaria); text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Perguntas Frequentes 💡</h2>
+        <p>Propriedade: <strong>{{ propriedade.nome }}</strong></p>
+
+        {% if not duvidas %}
+            <p style="color: #888; font-style: italic;">O anfitrião ainda não cadastrou dúvidas frequentes para este local.</p>
+        {% else %}
+            {% for d in duvidas %}
+                <div class="faq-item">
+                    <div class="pergunta">Q: {{ d[2] }}</div>
+                    <div class="resposta">A: {{ d[3] }}</div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <p style="margin-top: 40px; text-align: center; font-weight: bold;">Ainda com dúvidas?</p>
+        <a href="/chat/{{ propriedade.nome|urlencode }}/{{ session.usuario_email }}" class="btn-chat">💬 Falar com Anfitrião agora</a>
+        
+        <a href="javascript:history.back()" class="voltar">Voltar</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Favoritos - pousa.lá</title>
+    <style>
+        :root { --cor-fundo: #F7F9FA; --cor-primaria: #00A699; --cor-destaque: #FF5A5F; --cor-texto: #484848; --cor-branco: #FFFFFF; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--cor-fundo); color: var(--cor-texto); margin: 0; padding: 0; }
+        header { background-color: var(--cor-branco); padding: 15px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        header h1 { color: var(--cor-primaria); margin: 0; font-size: 24px; }
+        header a { text-decoration: none; color: var(--cor-texto); font-weight: bold; padding: 10px 20px; border-radius: 8px; border: 2px solid var(--cor-primaria); transition: all 0.3s ease; }
+        header a:hover { background-color: var(--cor-primaria); color: var(--cor-branco); }
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        .saudacao { font-size: 28px; color: var(--cor-primaria); margin-bottom: 30px; }
+        .resultado { background: var(--cor-branco); padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 6px solid var(--cor-destaque); display: flex; justify-content: space-between; align-items: center; }
+        .info-propriedade h3 { margin: 0 0 10px 0; color: var(--cor-texto); font-size: 20px; display: flex; align-items: center; gap: 10px;}
+        .btn-reservar { background-color: var(--cor-primaria); color: var(--cor-branco); border: none; padding: 12px 20px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; text-decoration: none; text-align: center;}
+        .btn-fav { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; }
+        .sem-resultado { color: #888; font-style: italic; font-size: 18px; text-align: center; margin-top: 50px;}
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>pousa.lá</h1>
+        <a href="javascript:history.back()">Voltar</a>
+    </header>
+
+    <div class="container">
+        <h1 class="saudacao">Meus Favoritos ❤️</h1>
+        <p>Lugares que você salvou para não perder de vista.</p>
+
+        {% if not propriedades %}
+            <p class="sem-resultado">Você ainda não favoritou nenhuma pousada.</p>
+        {% else %}
+            {% for prop in propriedades %}
+                <div class="resultado">
+                    <div class="info-propriedade">
+                        <h3>
+                            {{ prop.nome }} <span style="font-size: 16px; color: #f5a623;"> (⭐ {{ prop.media_notas }})</span>
+                            <form action="/favoritar/{{ prop.nome|urlencode }}" method="POST" style="margin: 0;">
+                                <button type="submit" class="btn-fav" title="Remover dos Favoritos">❤️</button>
+                            </form>
+                        </h3>
+                        <p>📍 {{ prop.localizacao }} | 👤 Até {{ prop.capacidade }} pessoas | 💰 R$ {{ prop.preco }} / noite</p>
+                    </div>
+                    <div>
+                        <a href="/reservar/{{ prop.nome|urlencode }}" class="btn-reservar">Reservar Agora</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+</body>
+</html>
