@@ -110,7 +110,6 @@ O projeto utiliza fortemente conceitos de **POO**:
 * **Herança** → Usuário, Hóspede e Anfitrião
 * **Encapsulamento** → Atributos privados e uso de `@property`
 * **Polimorfismo** → Métodos como `mostrar_painel()`
-* **Associação** → Relação entre usuários, propriedades e reservas
 
 ---
 
@@ -118,7 +117,7 @@ O projeto utiliza fortemente conceitos de **POO**:
 
 * Python 
 * Programação Orientada a Objetos (POO)
-* Banco de Dados (persistência de dados)
+* Banco de Dados 
 * PythonAnywhere (deploy)
 
 ---
