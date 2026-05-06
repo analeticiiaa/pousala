@@ -109,8 +109,6 @@ O projeto utiliza fortemente conceitos de **POO**:
 
 * **Herança** → Usuário, Hóspede e Anfitrião
 * **Encapsulamento** → Atributos privados e uso de `@property`
-* **Polimorfismo** → Métodos como `mostrar_painel()`
-
 ---
 
 ##  Tecnologias Utilizadas
